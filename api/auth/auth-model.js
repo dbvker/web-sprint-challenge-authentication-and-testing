@@ -4,7 +4,7 @@ const find = () => {
     return db('users');
 };
 
-const findBy = (filter) => { // might not need this... we'll see...
+const findBy = (filter) => {
     return db('users').where(filter);
 };
 

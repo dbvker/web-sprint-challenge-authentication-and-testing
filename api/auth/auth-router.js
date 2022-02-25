@@ -1,29 +1,31 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const User = require('./auth-model');
 
 router.post('/register', async (req, res, next) => {
- const { username, password } = req.body;
+    const { username, password } = req.body;
 
- if (!username || !password || req.body === null) {
-  next({ message: 'username and password required' })
- } else if (username) {
-    const checkUsername = await User.findBy({ username: username }).first();
-    if (checkUsername) {
-      next({ message: 'username taken' })
-    } else {
-     const passwordHash = bcrypt.hashSync(password, 8);
-      User.addUser({ username, password: passwordHash })
-       .then(added => {
-         res.status(200).json(added)
-       }).catch(next)
+    if (!username || !password || req.body === null) {
+        next({ message: 'username and password required' });
+    } else if (username) {
+        const user = await User.findBy({ username: username }).first();
+        if (user) {
+            next({ message: 'username taken' });
+        } else {
+            const passwordHash = bcrypt.hashSync(password, 8);
+            User.addUser({ username, password: passwordHash })
+                .then((added) => {
+                    res.status(200).json(added);
+                })
+                .catch(next);
+        }
     }
- }
 });
 
-router.post('/login', (req, res) => {
-  res.end('implement login, please!');
-  /*
+router.post('/login', async (req, res, next) => {
+    // res.end('implement login, please!');
+    /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
 
@@ -46,6 +48,31 @@ router.post('/login', (req, res) => {
     4- On FAILED login due to `username` not existing in the db, or `password` being incorrect,
       the response body should include a string exactly as follows: "invalid credentials".
   */
+    const { username, password } = req.body;
+
+    if (!username || !password || req.body === null) {
+        next({ message: 'username and password required' });
+    } else if (username) {
+        const user = await User.findBy({ username: username }).first();
+        if (user && bcrypt.compareSync(password, user.password)) {
+          const token = generateToken(user);
+          res.status(200).json({
+            message: `welcome, ${user.username}`,
+            token
+          })
+        } else {
+          next({ message: 'invalid credentials' });
+        }
+    }
 });
+
+const generateToken = (user) => {
+  const payload = {
+    subject: user.id,
+    username: user.username
+  };
+
+  return jwt.sign(payload, 'secret message', { expiresIn: '1d' })
+};
 
 module.exports = router;
