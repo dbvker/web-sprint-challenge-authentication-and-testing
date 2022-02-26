@@ -53,7 +53,16 @@ Your finished project must include all of the following requirements (further in
 
 Be prepared to demonstrate your understanding of this week's concepts by answering questions on the following topics.
 
-1. Differences between using _sessions_ or _JSON Web Tokens_ for authentication.
-2. What does `bcryptjs` do to help us store passwords in a secure manner?
-3. How are unit tests different from integration and end-to-end testing?
-4. How does _Test Driven Development_ change the way we write applications and tests?
+Be prepared to demonstrate your understanding of this week's concepts by answering questions on the following topics.
+
+Differences between using sessions or JSON Web Tokens for authentication.
+The big differences between sessions and JWTs for authentication are that sessions use cookies to transfer data back and forth from the server. JWTs don't need to attach to a cookie as they are a JSON object, so they are able to travel as they are.
+
+What does bcryptjs do to help us store passwords in a secure manner?
+bcrypt.js helps us store passwords in a secure manner uses an algorithm that hashes the information multiple times (rounds) means an attacker needs to have the hash, know the algorithm used, and how many rounds were used to generate the hash in the first place.
+
+How are unit tests different from integration and end-to-end testing?
+Unit tests are where we isolate smaller units of software (often functions or methods). Unit tests are fast, they're simple to write and execute, and they're the preferred tool for test driven development. However, end-to-end testing tests how different parts of the system work together.
+
+How does Test Driven Development change the way we write applications and tests?
+Test Driven Development changes the way we write applications and tests because we are reverse engineering applications if we are thinking about what we would want to test first, then writing the function once we have the test. This allows us to be confident in our code because we have the test to back our code.
